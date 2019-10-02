@@ -48,24 +48,36 @@ function component(width, height, color, x, y) {
     this.x = this.speedX;
     this.y = this.speedY;
   }
-  this.crashWith = function(otherObj) {
+  this.crashWith = function(otherobj) {
     var myleft = this.x;
     var myright = this.x + (this.width);
     var mytop = this.y;
     var mybottom = this.y + (this.height);
-    var otherleft = otherObj.x;
-    var otherright = otherObj.x + (otherObj.width);
-    var othertop = otherObj.y;
-    var otherbottom = otherObj.y + (otherObj.height);
+    var otherleft = otherobj.x;
+    var otherright = otherobj.x + (otherobj.width);
+    var othertop = otherobj.y;
+    var otherbottom = otherobj.y + (otherobj.height);
     var crash = true;
+    if ((mybottom < othertop) ||
+        (mytop > otherbottom) ||
+        (myright < otherleft) ||
+        (myleft > otherright)) {
+          crash = false;
+        }
+        return crash;
   }
 }
 
 function updateGameArea() {
-  myGameArea.clear();
-  myGamePiece.newPos();
-  myObstacle.update();
-  myGamePiece.update();
+  if (myGamePiece.crashWith(myObstacle)) {
+    myGameArea.stop();
+  } else {
+    myGameArea.clear();
+    myObstacle.x -= 1;
+    myObstacle.update();
+    myGamePiece.newPos();
+    myGamePiece.update();
+}
   if (myGameArea.keys && myGameArea.keys[65]) {
     myGamePiece.speedX -= 2;
   }
