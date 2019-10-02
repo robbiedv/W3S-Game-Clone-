@@ -1,10 +1,9 @@
 
 var myGamePiece;
-var myObstacle;
+var myObstacles = [];
 
 function startGame() {
   myGamePiece = new component(30, 30, "blue", 10, 120);
-  myObstacle = new component(10, 200, "red", 300, 120);
   myGameArea.start();
 }
 
@@ -15,6 +14,7 @@ var myGameArea = {
     this.canvas.height = 270;
     this.context = this.canvas.getContext("2d");
     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+    this.frameNo = 0;
     this.interval = setInterval(updateGameArea, 20);
     window.addEventListener('keydown', function (e) {
        myGameArea.keys = (myGameArea.keys || []);
@@ -30,6 +30,12 @@ var myGameArea = {
   stop : function() {
     clearInterval(this.interval);
   }
+}
+
+function everyinterval(n) {
+  if ((myGameArea.frameNo / n) % 1 == 0) {
+    return true;}
+  return false;
 }
 
 function component(width, height, color, x, y) {
@@ -69,15 +75,27 @@ function component(width, height, color, x, y) {
 }
 
 function updateGameArea() {
-  if (myGamePiece.crashWith(myObstacle)) {
-    myGameArea.stop();
-  } else {
+  var x, y;
+  for (i = 0; i < myObstacles.length; i += 1) {
+    if (myGamePiece.crashWith(myObstacles[i])) {
+      myGameArea.stop();
+      return;
+    }
+  }
     myGameArea.clear();
-    myObstacle.x -= 1;
-    myObstacle.update();
+    myGameArea.frameNo += 1;
+    if (myGameArea.frameNo == 1 || everyinterval(150)) {
+      x = myGameArea.canvas.width;
+      y = myGameArea.canvas.height - 200;
+      myObstacles.push(new component(10, 200, "red", x, y));
+    }
+    for (i=0; i < myObstacles.length; i += 1) {
+      myObstacles[i].x += -1;
+      myObstacles[i].update();
+    }
     myGamePiece.newPos();
     myGamePiece.update();
-}
+
   if (myGameArea.keys && myGameArea.keys[65]) {
     myGamePiece.speedX -= 2;
   }
