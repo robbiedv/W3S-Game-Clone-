@@ -7,7 +7,7 @@ Using JavaScript with HTML Canvas element to make a 2D side-scroller
 2. Avoid hitting the obstacles that scroll towards you
 3. Rack up as many points as you dare  
 
-**Play the game [here](https://robbiedv.github.io/W3S-Game-Clone-/)**  
+**Play the game [here](https://robbiedv.github.io/side-scroller/)**  
 * * *
 
 
